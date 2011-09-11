@@ -230,7 +230,7 @@ int check_iface(struct nf2device *nf2)
 	strcat(filename, nf2->device_name);
 	if (stat(filename, &buf) == 0)
 	{
-		fprintf(stderr, "Found net device: %s\n", nf2->device_name);
+		//fprintf(stderr, "Found net device: %s\n", nf2->device_name);
 		nf2->net_iface = 1;
 		return 0;
 	}

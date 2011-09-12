@@ -18,9 +18,8 @@ config.each do |eth, params|
 
   netfpga.set_number_of_phases i, params[:phases].size
 
-  type_numbers = { 'silent' => 0, 'QoS' => 1, 'CAN' => 2, 'DSS' => 3, 'MGT' => 4 }
   params[:phases].each.with_index do |(type, length), ph|
-    netfpga.set "SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG",   type_numbers[type]
-    netfpga.set "SCHEDULER_#{i}_PH_#{ph+1}_LENGTH_REG", length
+    netfpga.set_phase_type   i, ph, type
+    netfpga.set_phase_length i, ph, length
   end
 end

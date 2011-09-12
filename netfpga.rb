@@ -5,6 +5,8 @@ system 'gcc -c -fPIC netfpga-regset.c'                     unless File.exists? '
 system 'gcc -shared -o netfpga-regset.so netfpga-regset.o' unless File.exists? 'netfpga-regset.so'
 
 class NetFPGA
+  TypeNumbers = { 'silent' => 0, 'QoS' => 1, 'CAN' => 2, 'DSS' => 3, 'MGT' => 4 }
+
   extend FFI::Library
   ffi_lib './netfpga-regset.so'
 
@@ -37,6 +39,14 @@ class NetFPGA
     ints = mac.split(':').map { |hex| hex.to_i 16 }
     set "MAC_RXTX_#{i}_OTHER_MAC_HI_REG", ints[0] << 8 | ints[1]
     set "MAC_RXTX_#{i}_OTHER_MAC_LO_REG", ints[2] << 24 | ints[3] << 16 | ints[4] << 8 | ints[5]
+  end
+
+  def set_phase_length i, ph, length
+    set "SCHEDULER_#{i}_PH_#{ph+1}_LENGTH_REG", length
+  end
+
+  def set_phase_type i, ph, type
+    set "SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG", TypeNumbers[type]
   end
 end
 

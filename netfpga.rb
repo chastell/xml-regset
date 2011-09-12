@@ -23,6 +23,18 @@ class NetFPGA
     val
   end
 
+  def get_number_of_phases i
+    get "SCHEDULER_#{i}_NUM_PHASES_REG"
+  end
+
+  def get_phase_length i, ph
+    get "SCHEDULER_#{i}_PH_#{ph+1}_LENGTH_REG"
+  end
+
+  def get_phase_type i, ph
+    get TypeNumbers.invert["SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG"]
+  end
+
   def set reg, val
     puts "#{reg}\t<-\t#{val}" if $debug
     set_register @registers[reg], val if File.exists? '/sys/class/net/nf2c0'

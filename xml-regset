@@ -13,13 +13,8 @@ pp config
 config.each do |eth, params|
   i = eth[/\d$/].to_i
 
-  local = params[:local].split(':').map { |hh| hh.to_i 16 }
-  other = params[:other].split(':').map { |hh| hh.to_i 16 }
-
-  netfpga.set "MAC_RXTX_#{i}_LOCAL_MAC_HI_REG", local[0] << 8 | local[1]
-  netfpga.set "MAC_RXTX_#{i}_LOCAL_MAC_LO_REG", local[2] << 24 | local[3] << 16 | local[4] << 8 | local[5]
-  netfpga.set "MAC_RXTX_#{i}_OTHER_MAC_HI_REG", other[0] << 8 | other[1]
-  netfpga.set "MAC_RXTX_#{i}_OTHER_MAC_LO_REG", other[2] << 24 | other[3] << 16 | other[4] << 8 | other[5]
+  netfpga.set_local_mac i, params[:local]
+  netfpga.set_other_mac i, params[:other]
 
   netfpga.set "SCHEDULER_#{i}_NUM_PHASES_REG", params[:phases].size
 

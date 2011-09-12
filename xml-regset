@@ -1,53 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'ffi'
-require 'nokogiri'
 require 'pp'
 
-system 'gcc -c -fPIC netfpga-regset.c'                     unless File.exists? 'netfpga-regset.o'
-system 'gcc -shared -o netfpga-regset.so netfpga-regset.o' unless File.exists? 'netfpga-regset.so'
+require './netfpga'
+require './reg_parser'
+require './xml_parser'
 
-module NetFPGA
-  extend FFI::Library
-  ffi_lib './netfpga-regset.so'
-  attach_function :get_register, [:uint],        :uint
-  attach_function :set_register, [:uint, :uint], :void
-end
+config = XMLParser.parse ARGV.first
 
-config = {}
-
-Nokogiri::XML(File.read ARGV.first).xpath('/interfaces/interface').each do |interface|
-  phases = interface.xpath('SchedulerXENFPG/PhaseLength').map do |phase_length|
-    [phase_length.attr('pi'), phase_length.text.to_i]
-  end
-
-  silent_length = interface.xpath('SchedulerXENFPG/Cyclelength').first.text.to_i - phases.map(&:last).inject(:+)
-
-  phases << ['silent', silent_length] if silent_length > 0
-
-  config[interface.attr 'name'] = {
-    local: interface.xpath('LinkLayerMACTransmitter/MACSourceAddress').first.text,
-    other: interface.xpath('LinkLayerMACTransmitter/MACDestinationAddress').first.text,
-    phases: phases,
-  }
-end
-
-$regvals = Hash[File.read(ARGV.last).scan(/^#define\s+(\S+)\s+(\S+)$/).map do |reg, val|
-  [
-    reg,
-    case val
-    when /^\d+$/          then val.to_i
-    when /^0x[0-9a-f]+$/i then val.to_i 16
-    else                       val
-    end
-  ]
-end]
-
-pp config
-
-def NetFPGA.set_register reg, val
-  puts "setting #{$regvals.invert[reg]} to val #{val}"
-end unless File.exists? '/sys/class/net/nf2c0'
+$regvals = RegParser.parse ARGV.last
 
 config.each do |eth, params|
   i = eth[/\d$/].to_i

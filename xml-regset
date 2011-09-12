@@ -30,3 +30,16 @@ config.each do |eth, params|
     netfpga.set_phase_length i, ph, length
   end
 end
+
+(0..3).each do |i|
+  puts "port #{i}"
+
+  puts "\tlocal MAC: #{netfpga.get_mac i, :local}"
+  puts "\tother MAC: #{netfpga.get_mac i, :other}"
+
+  puts "\tnumber of phases: #{netfpga.get_number_of_phases i}"
+
+  (0..7).each do |ph|
+    puts "\tphase #{ph}: type: #{netfpga.get_phase_type i, ph}, length: #{netfpga.get_phase_length i, ph}"
+  end
+end

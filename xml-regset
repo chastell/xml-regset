@@ -27,7 +27,7 @@ config.each do |eth, params|
 
   params[:phases].each.with_index do |(type, length), ph|
     netfpga.set_phase_type   i, ph, type
-    netfpga.set_phase_length i, ph, length
+    netfpga.set_phase_length i, ph, length * 125
   end
 end
 

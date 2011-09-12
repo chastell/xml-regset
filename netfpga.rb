@@ -19,14 +19,18 @@ class NetFPGA
   end
 
   def get reg
-    val = get_register @registers[reg] if File.exists? '/sys/class/net/nf2c0'
+    val = get_register @registers[reg] if live?
     puts "#{reg}\t->#{val}" if $debug
     val
   end
 
   def set reg, val
     puts "#{reg}\t<-\t#{val}" if $debug
-    set_register @registers[reg], val if File.exists? '/sys/class/net/nf2c0'
+    set_register @registers[reg], val if live?
+  end
+
+  def live?
+    File.exists? '/sys/class/net/nf2c0'
   end
 
   def get_mac i, loc_oth

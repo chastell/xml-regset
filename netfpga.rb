@@ -29,6 +29,10 @@ class NetFPGA
     set "MAC_RXTX_#{i}_LOCAL_MAC_LO_REG", ints[2] << 24 | ints[3] << 16 | ints[4] << 8 | ints[5]
   end
 
+  def set_number_of_phases i, number
+    set "SCHEDULER_#{i}_NUM_PHASES_REG", number
+  end
+
   def set_other_mac i, mac
     ints = mac.split(':').map { |hex| hex.to_i 16 }
     set "MAC_RXTX_#{i}_OTHER_MAC_HI_REG", ints[0] << 8 | ints[1]

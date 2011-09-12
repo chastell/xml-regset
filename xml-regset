@@ -4,6 +4,11 @@ require 'pp'
 require './netfpga'
 require './xml_parser'
 
+unless ARGV.size == 2
+  puts "usage: #{$0} XML-config-file register-headers"
+  exit 1
+end
+
 netfpga = NetFPGA.new ARGV.last
 
 config = XMLParser.parse ARGV.first

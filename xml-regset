@@ -8,6 +8,8 @@ require './xml_parser'
 
 config = XMLParser.parse ARGV.first
 
+pp config
+
 $regvals = RegParser.parse ARGV.last
 
 config.each do |eth, params|
@@ -16,16 +18,16 @@ config.each do |eth, params|
   local = params[:local].split(':').map { |hh| hh.to_i 16 }
   other = params[:other].split(':').map { |hh| hh.to_i 16 }
 
-  NetFPGA.set_register $regvals["MAC_RXTX_#{i}_LOCAL_MAC_HI_REG"], local[0] << 8 | local[1]
-  NetFPGA.set_register $regvals["MAC_RXTX_#{i}_LOCAL_MAC_LO_REG"], local[2] << 24 | local[3] << 16 | local[4] << 8 | local[5]
-  NetFPGA.set_register $regvals["MAC_RXTX_#{i}_OTHER_MAC_HI_REG"], other[0] << 8 | other[1]
-  NetFPGA.set_register $regvals["MAC_RXTX_#{i}_OTHER_MAC_LO_REG"], other[2] << 24 | other[3] << 16 | other[4] << 8 | other[5]
+  NetFPGA.set "MAC_RXTX_#{i}_LOCAL_MAC_HI_REG", local[0] << 8 | local[1]
+  NetFPGA.set "MAC_RXTX_#{i}_LOCAL_MAC_LO_REG", local[2] << 24 | local[3] << 16 | local[4] << 8 | local[5]
+  NetFPGA.set "MAC_RXTX_#{i}_OTHER_MAC_HI_REG", other[0] << 8 | other[1]
+  NetFPGA.set "MAC_RXTX_#{i}_OTHER_MAC_LO_REG", other[2] << 24 | other[3] << 16 | other[4] << 8 | other[5]
 
-  NetFPGA.set_register $regvals["SCHEDULER_#{i}_NUM_PHASES_REG"], params[:phases].size
+  NetFPGA.set "SCHEDULER_#{i}_NUM_PHASES_REG", params[:phases].size
 
   type_numbers = { 'silent' => 0, 'QoS' => 1, 'CAN' => 2, 'DSS' => 3, 'MGT' => 4 }
   params[:phases].each.with_index do |(type, length), ph|
-    NetFPGA.set_register $regvals["SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG"],   type_numbers[type]
-    NetFPGA.set_register $regvals["SCHEDULER_#{i}_PH_#{ph+1}_LENGTH_REG"], length
+    NetFPGA.set "SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG",   type_numbers[type]
+    NetFPGA.set "SCHEDULER_#{i}_PH_#{ph+1}_LENGTH_REG", length
   end
 end

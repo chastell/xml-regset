@@ -8,6 +8,14 @@ module NetFPGA
   ffi_lib './netfpga-regset.so'
   attach_function :get_register, [:uint],        :uint
   attach_function :set_register, [:uint, :uint], :void
+
+  def self.get reg
+    self.get_register $regvals[reg]
+  end
+
+  def self.set reg, val
+    self.set_register $regvals[reg], val
+  end
 end
 
 def NetFPGA.set_register reg, val

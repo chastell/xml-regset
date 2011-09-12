@@ -20,8 +20,8 @@ pp config if $debug
 config.each do |eth, params|
   i = eth[/\d$/].to_i
 
-  netfpga.set_local_mac i, params[:local]
-  netfpga.set_other_mac i, params[:other]
+  netfpga.set_mac i, :local, params[:local]
+  netfpga.set_mac i, :other, params[:other]
 
   netfpga.set_number_of_phases i, params[:phases].size
 

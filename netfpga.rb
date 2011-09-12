@@ -49,7 +49,7 @@ class NetFPGA
   end
 
   def get_phase_type i, ph
-    get TypeNumbers.invert["SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG"]
+    TypeNumbers.invert[get "SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG"]
   end
 
   def set_mac i, loc_oth, mac

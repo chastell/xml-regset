@@ -23,8 +23,15 @@ class NetFPGA
   end
 end
 
-class NetFPGA
-  def set_register reg, val
-    puts "setting #{@registers.invert[reg]} to val #{val}"
-  end unless File.exists? '/sys/class/net/nf2c0'
+
+unless File.exists? '/sys/class/net/nf2c0'
+  class NetFPGA
+    def get reg
+      puts "#{reg}\t->"
+    end
+
+    def set reg, val
+      puts "#{reg}\t<-\t#{val}"
+    end
+  end
 end

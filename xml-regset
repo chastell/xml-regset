@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+$debug = true
+
 require 'pp'
 require './netfpga'
 require './xml_parser'
@@ -13,7 +15,7 @@ netfpga = NetFPGA.new ARGV.last
 
 config = XMLParser.parse ARGV.first
 
-pp config
+pp config if $debug
 
 config.each do |eth, params|
   i = eth[/\d$/].to_i

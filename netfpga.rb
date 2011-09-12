@@ -18,11 +18,14 @@ class NetFPGA
   end
 
   def get reg
-    get_register @registers[reg]
+    val = get_register @registers[reg] if File.exists? '/sys/class/net/nf2c0'
+    puts "#{reg}\t->#{val}" if $debug
+    val
   end
 
   def set reg, val
-    set_register @registers[reg], val
+    puts "#{reg}\t<-\t#{val}" if $debug
+    set_register @registers[reg], val if File.exists? '/sys/class/net/nf2c0'
   end
 
   def set_local_mac i, mac
@@ -47,18 +50,5 @@ class NetFPGA
 
   def set_phase_type i, ph, type
     set "SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG", TypeNumbers[type]
-  end
-end
-
-
-unless File.exists? '/sys/class/net/nf2c0'
-  class NetFPGA
-    def get reg
-      puts "#{reg}\t->"
-    end
-
-    def set reg, val
-      puts "#{reg}\t<-\t#{val}"
-    end
   end
 end

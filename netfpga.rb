@@ -7,6 +7,7 @@ system 'gcc -shared -o netfpga-regset.so netfpga-regset.o' unless File.exists? '
 class NetFPGA
   extend FFI::Library
   ffi_lib './netfpga-regset.so'
+
   attach_function :get_register, [:uint],        :uint
   attach_function :set_register, [:uint, :uint], :void
 

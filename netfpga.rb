@@ -23,8 +23,22 @@ class NetFPGA
     val
   end
 
+  def get_local_mac i
+    hi = get "MAC_RXTX_#{i}_LOCAL_MAC_HI_REG"
+    lo = get "MAC_RXTX_#{i}_LOCAL_MAC_LO_REG"
+    ints = [(hi & 0xff00) >> 8, hi & 0xff, (lo & 0xff000000) >> 24, (lo & 0xff0000) >> 16, (lo & 0xff00) >> 8, lo & 0xff]
+    ints.map { |i| i.to_s(16).rjust 2, '0'}.join ':'
+  end
+
   def get_number_of_phases i
     get "SCHEDULER_#{i}_NUM_PHASES_REG"
+  end
+
+  def get_other_mac i
+    hi = get "MAC_RXTX_#{i}_OTHER_MAC_HI_REG"
+    lo = get "MAC_RXTX_#{i}_OTHER_MAC_LO_REG"
+    ints = [(hi & 0xff00) >> 8, hi & 0xff, (lo & 0xff000000) >> 24, (lo & 0xff0000) >> 16, (lo & 0xff00) >> 8, lo & 0xff]
+    ints.map { |i| i.to_s(16).rjust 2, '0'}.join ':'
   end
 
   def get_phase_length i, ph

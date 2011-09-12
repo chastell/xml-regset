@@ -20,12 +20,12 @@ class NetFPGA
 
   def get reg
     val = live? ? get_register(@registers[reg]) : 0
-    puts "#{reg}\t->\t#{val}" if $debug
+    puts "\t\t#{reg}\t->\t#{val}" if $debug
     val
   end
 
   def set reg, val
-    puts "#{reg}\t<-\t#{val}" if $debug
+    puts "\t\t#{reg}\t<-\t#{val}" if $debug
     set_register @registers[reg], val if live?
   end
 

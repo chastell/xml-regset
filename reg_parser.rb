@@ -1,4 +1,5 @@
 module RegParser
+
   def self.parse file
     Hash[File.read(file).scan(/^#define\s+(\S+)\s+(\S+)$/).map do |reg, val|
       [
@@ -11,4 +12,5 @@ module RegParser
       ]
     end]
   end
+
 end

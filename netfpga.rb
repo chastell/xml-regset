@@ -5,6 +5,7 @@ system 'gcc -c -fPIC netfpga-regset.c'                     unless File.exists? '
 system 'gcc -shared -o netfpga-regset.so netfpga-regset.o' unless File.exists? 'netfpga-regset.so'
 
 class NetFPGA
+
   TypeNumbers = { 'silent' => 0, 'QoS' => 1, 'CAN' => 2, 'DSS' => 3, 'MGT' => 4 }
 
   extend FFI::Library
@@ -64,4 +65,5 @@ class NetFPGA
   def set_phase_type i, ph, type
     set "SCHEDULER_#{i}_PH_#{ph+1}_TYPE_REG", TypeNumbers[type]
   end
+
 end

@@ -1,6 +1,7 @@
 require 'nokogiri'
 
 module XMLParser
+
   def self.parse file
     Hash[Nokogiri::XML(File.read file).xpath('/interfaces/interface').map do |interface|
       phases = interface.xpath('SchedulerXENFPG/PhaseLength').map { |p| [p.attr('pi'), p.text.to_i] }
@@ -19,4 +20,5 @@ module XMLParser
       ]
     end]
   end
+
 end

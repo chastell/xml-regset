@@ -1,5 +1,6 @@
 require 'ffi'
-require './reg_parser'
+
+require_relative './reg_parser'
 
 system 'gcc -c -fPIC netfpga-regset.c'                     unless File.exists? 'netfpga-regset.o'
 system 'gcc -shared -o netfpga-regset.so netfpga-regset.o' unless File.exists? 'netfpga-regset.so'
@@ -9,7 +10,7 @@ class NetFPGA
   TypeNumbers = { 'silent' => 0, 'QoS' => 1, 'CAN' => 2, 'DSS' => 3, 'MGT' => 4 }
 
   extend FFI::Library
-  ffi_lib './netfpga-regset.so'
+  ffi_lib "#{File.dirname __FILE__}/netfpga-regset.so"
 
   attach_function :get_register, [:uint],        :uint
   attach_function :set_register, [:uint, :uint], :void

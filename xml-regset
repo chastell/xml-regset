@@ -3,8 +3,9 @@
 $debug = true
 
 require 'pp'
-require './netfpga'
-require './xml_parser'
+
+require_relative './netfpga'
+require_relative './xml_parser'
 
 unless ARGV.size == 2
   puts "usage: #{$0} XML-config-file register-headers"
